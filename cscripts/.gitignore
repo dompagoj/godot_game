@@ -1,0 +1,7 @@
+cmake-build-*
+godot-cpp/**
+epic-online-services/Samples
+epic-online-services/SDK
+epic-online-services/ThirdPartyNotices
+.vscode
+.idea

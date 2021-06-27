@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Units/Marine.gdns" type="Script" id=2]
+[ext_resource path="res://Sprites/Units/Marine/MarineSprite.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 12.2331
+
+[node name="RigidBody2D" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 3
+mode = 2
+contacts_reported = 10
+contact_monitor = true
+linear_damp = 20.73
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2( -0.615323, 6.7808 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0.631632, -0.280617 )
+texture = ExtResource( 3 )
+
+[node name="StopTimer" type="Timer" parent="."]
+
+[node name="DieTimer" type="Timer" parent="."]

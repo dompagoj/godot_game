@@ -1,0 +1,20 @@
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
+
+find_program(CCACHE ccache)
+if (CCACHE)
+    message("Using ccache")
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+else ()
+    message("ccache not found cannot use")
+endif ()
+
+find_program(CTIDY clang-tidy)
+if (CTIDY)
+    message("Using clang tidy")
+    set(CMAKE_CXX_CLANG_TIDY ${CTIDY})
+else ()
+    message("Clang tidy not found")
+endif ()

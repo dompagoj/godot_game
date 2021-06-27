@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 6.47391
+
+[node name="Unit" type="RigidBody2D"]
+mode = 2
+gravity_scale = 0.0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2( -1.337, 9.965 )
+scale = Vector2( 0.873, 0.298 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="StopTimer" type="Timer" parent="."]
