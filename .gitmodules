@@ -1,0 +1,3 @@
+[submodule "cscripts/godot-cpp"]
+        path = cscripts/godot-cpp
+        url = https://github.com/godotengine/godot-cpp
