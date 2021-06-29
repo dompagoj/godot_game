@@ -24,7 +24,7 @@ void Game::_register_methods()
     REGISTER_READY(Game)
 //    REGISTER_METHOD(on_timeout, Game)
     register_method("on_circle_indicator_timeout", &Game::OnCircleIndicatorTimeout);
-    register_method("on_unit_select", &Game::OnUnitSelect);
+    register_method("on_unit_select", &Game::OnUnitSelectChange);
 }
 
 void Game::_ready()
@@ -36,7 +36,7 @@ void Game::_ready()
     for (int i = 0; i < units.size(); i++)
     {
         auto unit = cast_to<BaseUnit>(units[i]);
-        unit->connect("selected", this, "on_unit_select");
+        unit->connect("selected_change", this, "on_unit_select");
     }
 
     PosIndicatorTimer->connect("timeout", this, "on_circle_indicator_timeout");
@@ -89,13 +89,16 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
 {
     if (input_event->is_pressed())
     {
+        for (const auto& unit: Selected)
+        {
+            if (unit->Selected) unit->ToggleSelect();
+        }
         Selected.clear();
         Dragging = true;
         DragStart = get_canvas_transform().xform_inv(input_event->get_global_position());
     }
     else if (Dragging)
     {
-        Godot::print("Dragging handler!");
         Dragging = false;
         update();
 
@@ -109,7 +112,7 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
         query->set_collide_with_areas(true); // TODO make this work with Selector area in unit scene
         query->set_collision_layer(GetLayers(UNITS));
 
-        auto result = space->intersect_shape(query);
+        auto result = space->intersect_shape(query, 1000);
 
         for (int i = 0; i < result.size(); i++)
         {
@@ -118,7 +121,7 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
             auto* base_unit = cast_to<BaseUnit>(collider);
             if (base_unit)
             {
-                base_unit->Selected = true;
+                base_unit->ToggleSelect();
                 Selected.push_back(base_unit);
             }
         }
@@ -136,10 +139,19 @@ void Game::OnCircleIndicatorTimeout()
     RightClickPosition = Vector2::ZERO;
     update();
 }
-void Game::OnUnitSelect(BaseUnit* unit)
+void Game::OnUnitSelectChange(BaseUnit* unit, bool selected)
 {
-    Godot::print("On unit select!");
-    Dragging = false;
-    Selected.clear();
-    Selected.push_back(unit);
+    Godot::print("On unit select change!");
+    if (selected)
+    {
+        Godot::print("On unit select!");
+        Dragging = false;
+        for (const auto& selectedUnit: Selected)
+        {
+            if (selectedUnit->Selected) selectedUnit->ToggleSelect();
+        }
+        Selected.clear();
+        Selected.push_back(unit);
+
+    }
 }

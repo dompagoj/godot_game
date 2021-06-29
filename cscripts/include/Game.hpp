@@ -35,7 +35,7 @@ class Game : public Node2D
     void DrawCircle(Vector2 pos);
     void HandleLeftClick(godot::InputEventMouseButton*);
     void HandleRightClick(godot::InputEventMouseButton*);
-    void OnUnitSelect(BaseUnit* unit);
+    void OnUnitSelectChange(BaseUnit* unit, bool selected);
 
     void OnCircleIndicatorTimeout();
 };
