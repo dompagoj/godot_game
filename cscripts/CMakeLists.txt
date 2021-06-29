@@ -28,15 +28,9 @@ add_library(MyLibrary SHARED
         src/MyCamera.cpp
     )
 
-target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
+if (NOT MSVC)
+  target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
+endif()
 
 target_link_libraries(MyLibrary PUBLIC godot-cpp)
 target_link_libraries(MyLibrary PUBLIC ${EOS_SDK_LIBRARIES})
-
-#target_include_directories(MyLibrary
-#        PUBLIC
-#        $<INSTALL_INTERFACE:include>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        PRIVATE
-#        ${CMAKE_CURRENT_SOURCE_DIR}/src
-#        )
