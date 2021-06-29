@@ -15,6 +15,7 @@ class BaseUnit : public RigidBody2D
 //    _PHYSICS_PROCESS()
     _READY()
     _INTEGRATE_FORCES()
+    _DRAW()
 
 
 
@@ -27,10 +28,8 @@ class BaseUnit : public RigidBody2D
     void Move(Vector2);
     void MovementLoop(float);
     void Die();
-
-    int64_t Health = 100;
+    void ToggleSelect();
     bool Selected{false};
-    bool Dead{false};
 
     float Speed = BaseSpeed;
 
@@ -38,12 +37,15 @@ class BaseUnit : public RigidBody2D
     void BodyEntered(Node* body);
 
  private:
+    bool Dead{false};
     Vector2 TargetPosition = Vector2::ZERO;
     Vector2 Velocity = Vector2::ZERO;
     Timer* DieTimer = nullptr;
 
  protected:
     constexpr static const float BaseSpeed = 5;
+    int64_t Health = 100;
+
     static consteval float MultiplySpeedFromBaseConst(float val)
     {
         return BaseSpeed * val;

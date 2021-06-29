@@ -9,11 +9,22 @@ const float SPEED_MODIFIER = 50.f;
 
 void BaseUnit::_register_methods()
 {
-    REGISTER_READY(BaseUnit);
-    REGISTER_INTEGRATE_FORCES(BaseUnit);
+    REGISTER_READY(BaseUnit)
+    REGISTER_INTEGRATE_FORCES(BaseUnit)
+    REGISTER_DRAW(BaseUnit)
     register_method("on_input", &BaseUnit::OnInputEvent);
-    register_signal<BaseUnit>("selected");
+    register_signal<BaseUnit>("selected_change");
     register_method("on_body_entered", &BaseUnit::BodyEntered);
+}
+
+void BaseUnit::_draw()
+{
+    Godot::print("Draw called!");
+    if (!Selected) return;
+
+    Godot::print("Drawing circle?!");
+    auto pos = get_position();
+    draw_circle(pos, 10, Color{ 0.5, 0.5, 0.5 });
 }
 
 void BaseUnit::_ready()
@@ -22,8 +33,8 @@ void BaseUnit::_ready()
     DieTimer->connect("timeout", this, "queue_free");
     connect("body_entered", this, "on_body_entered");
 
-//    auto* select = get_node<Area2D>("Selector");
-//    select->connect("input_event", this, "on_input");
+    auto* select = get_node<Area2D>("Selector");
+    select->connect("input_event", this, "on_input");
 
 //    set_collision_layer(GetLayers(UNITS));
 //    set_collision_mask(GetLayers(WORLD, UNITS));
@@ -34,11 +45,7 @@ void BaseUnit::OnInputEvent(Node* viewport, const InputEvent* inputEvent, int64_
     auto mouseEvent = cast_to<InputEventMouseButton>(inputEvent);
     if (!mouseEvent) return;
 
-    if (mouseEvent->is_action_pressed("left_click"))
-    {
-        Selected = true;
-        emit_signal("selected", this);
-    }
+    if (mouseEvent->is_action_pressed("left_click")) ToggleSelect();
 }
 
 void BaseUnit::Attack()
@@ -54,23 +61,20 @@ void BaseUnit::Move(Vector2 position)
 void BaseUnit::_integrate_forces(const Physics2DDirectBodyState* state)
 {
     if (TargetPosition == Vector2::ZERO || Dead) return;
-    Godot::print("Integrate forces!");
     const auto currentPosition = get_position();
-    Velocity = currentPosition.direction_to(TargetPosition).normalized() * Speed * SPEED_MODIFIER;
     const auto distanceTo = currentPosition.distance_to(TargetPosition);
 
-    if (distanceTo < 5)
+    if (distanceTo > 3.5)
+    {
+        Velocity = currentPosition.direction_to(TargetPosition) * Speed * SPEED_MODIFIER;
+    }
+    else
     {
         TargetPosition = Vector2::ZERO;
         Velocity = Vector2::ZERO;
     }
 
     set_linear_velocity(Velocity);
-//    else if (Velocity != Vector2::ZERO)
-//    {
-//        Velocity = Vector2::ZERO;
-//        set_linear_velocity(Velocity);
-//    }
 }
 
 //void BaseUnit::_physics_process(float delta)
@@ -114,13 +118,15 @@ void BaseUnit::Die()
 void BaseUnit::BodyEntered(Node* body)
 {
     // TODO Somehow move stationary friendly units out of the way
-
-    Godot::print("Selected?: " + String(Selected ? "True" : "False"));
     if (!Selected || Velocity == Vector2::ZERO) return;
     auto* otherUnit = cast_to<BaseUnit>(body);
-    if (!otherUnit || otherUnit->Velocity != Vector2::ZERO) return;
+    if (!otherUnit) return;
 
-    otherUnit->TakeDamage(150);
+    auto direction = Velocity.normalized();
+
+    otherUnit->apply_impulse(Vector2(), Vector2(0, 100));
+
+//    otherUnit->TakeDamage(150);
 }
 void BaseUnit::TakeDamage(int64_t damage)
 {
@@ -128,5 +134,15 @@ void BaseUnit::TakeDamage(int64_t damage)
 
     Godot::print("Death!");
     if (Health <= 0) Die();
+}
+void BaseUnit::ToggleSelect()
+{
+    Godot::print("Toggle select!");
+    Selected = !Selected;
+//    update();
+    emit_signal("selected_change", this, Selected);
+
+    auto selectedNode = get_node<Node2D>("SelectedNode");
+    selectedNode->set_visible(Selected);
 }
 
