@@ -14,19 +14,22 @@
 #define _PROCESS() void _process(float);
 #define _PHYSICS_PROCESS() void _physics_process(float);
 #define _INIT() void _init();
-#define _EMPTY_INIT() void _init() {}
-#define _INPUT() void _input(const InputEvent* event);
+#define _EMPTY_INIT()                                                                                                  \
+    void _init()                                                                                                       \
+    {                                                                                                                  \
+    }
+#define _INPUT() void _input(const InputEvent *event);
 #define _READY() void _ready();
-#define _UNHANDLED_INPUT() void _unhandled_input(const InputEvent* event);
-#define _UNHANDLED_KEY_INPUT() void _unhandled_input(const InputEventKey* event);
+#define _UNHANDLED_INPUT() void _unhandled_input(const InputEvent *event);
+#define _UNHANDLED_KEY_INPUT() void _unhandled_input(const InputEventKey *event);
 #define _DRAW() void _draw();
 #define _FIXED_PROCESS() void _fixed_process(float);
-#define _INTEGRATE_FORCES() void _integrate_forces(const Physics2DDirectBodyState* state);
+#define _INTEGRATE_FORCES() void _integrate_forces(const Physics2DDirectBodyState *state);
 
-#define _INHERITED_METHOD(BASE_CLASS, METHOD)  \
-void METHOD()              \
-{                                               \
-    BASE_CLASS::METHOD();        \
-}
+#define _INHERITED_METHOD(BASE_CLASS, METHOD)                                                                          \
+    void METHOD()                                                                                                      \
+    {                                                                                                                  \
+        BASE_CLASS::METHOD();                                                                                          \
+    }
 
 #define _INHERITED_INIT(BASE_CLASS) _INHERITED_METHOD(BASE_CLASS, _init)

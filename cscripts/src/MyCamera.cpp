@@ -1,21 +1,20 @@
 #include "MyCamera.hpp"
-#include "SceneTree.hpp"
-#include "Viewport.hpp"
 #include "Area2D.hpp"
 #include "InputEventMouseButton.hpp"
+#include "SceneTree.hpp"
+#include "Viewport.hpp"
 
 void MyCamera::_register_methods()
 {
-//    register_property("speed", &MyCamera::Speed, 5.f);
-//    register_property("move_threshold", &MyCamera::MoveThreshold, 50.f);
+    //    register_property("speed", &MyCamera::Speed, 5.f);
+    //    register_property("move_threshold", &MyCamera::MoveThreshold, 50.f);
     register_method("on_size_change", &MyCamera::OnSizeChange);
     REGISTER_PROCESS(MyCamera)
     REGISTER_READY(MyCamera)
     REGISTER_UNHANDLED_INPUT(MyCamera)
 }
 
-MyCamera::MyCamera()
-    : Speed(10.f), MoveThreshold(25.f)
+MyCamera::MyCamera() : Speed(10.f), MoveThreshold(25.f)
 {
     MoveThresholdPercentage = MoveThreshold / 100; // TODO
 }
@@ -28,22 +27,22 @@ void MyCamera::_ready()
     WinSize = viewPort->get_size();
 }
 
-void MyCamera::_unhandled_input(const InputEvent* event)
+void MyCamera::_unhandled_input(const InputEvent *event)
 {
-//    auto mouseEvent = cast_to<InputEventMouseButton>(event);
-//    if (!mouseEvent) return;
-//
-//    auto currZoom = get_zoom();
-//
-//    if (mouseEvent->is_action_pressed("scroll_up"))
-//    {
-//        ZoomCamera(0.1, get_global_mouse_position());
-//    }
-//
-//    if (mouseEvent->is_action_pressed("scroll_down"))
-//    {
-//        set_zoom(currZoom + Vector2(0.05, 0.05));
-//    }
+    //    auto mouseEvent = cast_to<InputEventMouseButton>(event);
+    //    if (!mouseEvent) return;
+    //
+    //    auto currZoom = get_zoom();
+    //
+    //    if (mouseEvent->is_action_pressed("scroll_up"))
+    //    {
+    //        ZoomCamera(0.1, get_global_mouse_position());
+    //    }
+    //
+    //    if (mouseEvent->is_action_pressed("scroll_down"))
+    //    {
+    //        set_zoom(currZoom + Vector2(0.05, 0.05));
+    //    }
 }
 
 void MyCamera::ZoomCamera(float zoomSpeed, Vector2 position)
@@ -63,25 +62,13 @@ void MyCamera::_process(float delta)
     Vector2 newPos = currentPos;
 
     auto moveBy = Speed * delta * 100;
-    if (mousePos.x <= MoveThreshold)
-    {
-        newPos.x = currentPos.x - moveBy;
-    }
+    if (mousePos.x <= MoveThreshold) { newPos.x = currentPos.x - moveBy; }
 
-    if (mousePos.x + MoveThreshold >= WinSize.x)
-    {
-        newPos.x = currentPos.x + moveBy;
-    }
+    if (mousePos.x + MoveThreshold >= WinSize.x) { newPos.x = currentPos.x + moveBy; }
 
-    if (mousePos.y <= MoveThreshold)
-    {
-        newPos.y = currentPos.y - moveBy;
-    }
+    if (mousePos.y <= MoveThreshold) { newPos.y = currentPos.y - moveBy; }
 
-    if (mousePos.y + MoveThreshold >= WinSize.y)
-    {
-        newPos.y = currentPos.y + moveBy;
-    }
+    if (mousePos.y + MoveThreshold >= WinSize.y) { newPos.y = currentPos.y + moveBy; }
 
     set_position(newPos);
 }
