@@ -1,4 +1,4 @@
-#include <gen/GlobalConstants.hpp>
+#include <GlobalConstants.hpp>
 #include <InputEventMouseMotion.hpp>
 #include "Game.hpp"
 #include "World2D.hpp"
@@ -12,7 +12,7 @@
 #include "Color.hpp"
 #include "Utils.hpp"
 
-godot::String AddBool(const godot::String& str, bool val)
+godot::String AddBool(const godot::String &str, bool val)
 {
     return str + (val ? "True" : "False");
 }
@@ -22,7 +22,7 @@ void Game::_register_methods()
     REGISTER_UNHANDLED_INPUT(Game)
     REGISTER_DRAW(Game)
     REGISTER_READY(Game)
-//    REGISTER_METHOD(on_timeout, Game)
+    //    REGISTER_METHOD(on_timeout, Game)
     register_method("on_circle_indicator_timeout", &Game::OnCircleIndicatorTimeout);
     register_method("on_unit_select", &Game::OnUnitSelectChange);
 }
@@ -47,16 +47,18 @@ void Game::_init()
     SelectRectangle = Ref(RectangleShape2D::_new());
 }
 
-void Game::_unhandled_input(const InputEvent* event)
+void Game::_unhandled_input(const InputEvent *event)
 {
-    auto* inputEvent = cast_to<InputEventMouseButton>(event);
+    auto *inputEvent = cast_to<InputEventMouseButton>(event);
     if (inputEvent)
     {
-        if (inputEvent->is_action("left_click")) HandleLeftClick(inputEvent);
-        else if (inputEvent->is_action_pressed("right_click")) HandleRightClick(inputEvent);
+        if (inputEvent->is_action("left_click"))
+            HandleLeftClick(inputEvent);
+        else if (inputEvent->is_action_pressed("right_click"))
+            HandleRightClick(inputEvent);
     }
 
-    auto* motionEvent = cast_to<InputEventMouseMotion>(event);
+    auto *motionEvent = cast_to<InputEventMouseMotion>(event);
     if (motionEvent && Dragging)
     {
         update();
@@ -68,8 +70,8 @@ void Game::_draw()
     if (Dragging)
     {
         auto mousePos = get_global_mouse_position();
-        draw_rect(Rect2(DragStart, mousePos - DragStart), Color{ 1.8, 2.3, 2.55, 0.1 });
-        draw_rect(Rect2(DragStart, mousePos - DragStart), Color{ 1.8, 2.3, 2.55, 1 }, false);
+        draw_rect(Rect2(DragStart, mousePos - DragStart), Color{1.8, 2.3, 2.55, 0.1});
+        draw_rect(Rect2(DragStart, mousePos - DragStart), Color{1.8, 2.3, 2.55, 1}, false);
     }
 
     if (RightClickPosition != Vector2::ZERO)
@@ -85,13 +87,14 @@ void Game::DrawCircle(Vector2 pos)
     PosIndicatorTimer->start(1);
 }
 
-void Game::HandleLeftClick(InputEventMouseButton* input_event)
+void Game::HandleLeftClick(InputEventMouseButton *input_event)
 {
     if (input_event->is_pressed())
     {
-        for (const auto& unit: Selected)
+        for (const auto &unit : Selected)
         {
-            if (unit->Selected) unit->ToggleSelect();
+            if (unit->Selected)
+                unit->ToggleSelect();
         }
         Selected.clear();
         Dragging = true;
@@ -105,7 +108,7 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
         auto drag_end = get_canvas_transform().xform_inv(input_event->get_global_position());
         SelectRectangle->set_extents((drag_end - DragStart) / 2);
 
-        auto* space = get_world_2d()->get_direct_space_state();
+        auto *space = get_world_2d()->get_direct_space_state();
         Ref<Physics2DShapeQueryParameters> query = Physics2DShapeQueryParameters::_new();
         query->set_shape(SelectRectangle);
         query->set_transform(Transform2D(0, (drag_end + DragStart) / 2));
@@ -118,7 +121,7 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
         {
             auto collider = ((Dictionary)result[i])["collider"];
 
-            auto* base_unit = cast_to<BaseUnit>(collider);
+            auto *base_unit = cast_to<BaseUnit>(collider);
             if (base_unit)
             {
                 base_unit->ToggleSelect();
@@ -127,31 +130,33 @@ void Game::HandleLeftClick(InputEventMouseButton* input_event)
         }
     }
 }
-void Game::HandleRightClick(InputEventMouseButton* input_event)
+void Game::HandleRightClick(InputEventMouseButton *input_event)
 {
-    if (Selected.empty()) return;
+    if (Selected.empty())
+        return;
     auto position = get_canvas_transform().xform_inv(input_event->get_global_position());
     DrawCircle(position);
-    for (auto unit : Selected) unit->Move(position);
+    for (auto unit : Selected)
+        unit->Move(position);
 }
 void Game::OnCircleIndicatorTimeout()
 {
     RightClickPosition = Vector2::ZERO;
     update();
 }
-void Game::OnUnitSelectChange(BaseUnit* unit, bool selected)
+void Game::OnUnitSelectChange(BaseUnit *unit, bool selected)
 {
     Godot::print("On unit select change!");
     if (selected)
     {
         Godot::print("On unit select!");
         Dragging = false;
-        for (const auto& selectedUnit: Selected)
+        for (const auto &selectedUnit : Selected)
         {
-            if (selectedUnit->Selected) selectedUnit->ToggleSelect();
+            if (selectedUnit->Selected)
+                selectedUnit->ToggleSelect();
         }
         Selected.clear();
         Selected.push_back(unit);
-
     }
 }

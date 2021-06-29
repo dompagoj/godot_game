@@ -11,11 +11,6 @@ include(project_settings.cmake)
 add_subdirectory(godot-cpp)
 add_subdirectory(epic-online-services)
 
-
-include_directories(include)
-include_directories(src)
-include_directories(epic-online-services/SDK/Include)
-
 add_library(MyLibrary SHARED
         src/Macros.hpp
         src/MyLibrary.cpp
@@ -27,6 +22,11 @@ add_library(MyLibrary SHARED
         src/Utils.hpp
         src/MyCamera.cpp
     )
+
+target_include_directories(MyLibrary PUBLIC include)
+target_include_directories(MyLibrary PUBLIC lib/godot-cpp/include/gen)
+target_include_directories(MyLibrary PUBLIC src)
+target_include_directories(MyLibrary PUBLIC epic-online-services/SDK/Include)
 
 target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
 
