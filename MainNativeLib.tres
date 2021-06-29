@@ -1,5 +1,7 @@
 [gd_resource type="GDNativeLibrary" format=2]
 
 [resource]
+entry/Windows.64 = "res://cscripts/build/RelWithDebInfo/MyLibrary.dll"
 entry/X11.64 = "res://cscripts/cmake-build-relwithdebinfo/libMyLibrary.so"
+dependency/Windows.64 = [  ]
 dependency/X11.64 = [  ]
