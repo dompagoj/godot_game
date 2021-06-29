@@ -17,30 +17,28 @@ class BaseUnit : public RigidBody2D
     _INTEGRATE_FORCES()
     _DRAW()
 
-
-
-
     BaseUnit() = default;
-    BaseUnit(float speed);
+    explicit BaseUnit(float speed);
 
     void Attack();
     void TakeDamage(int64_t damage);
     void Move(Vector2);
     void MovementLoop(float);
     void Die();
-    void ToggleSelect();
+    void SetSelected(bool);
+    void OnSelectedChange();
     bool Selected{false};
 
     float Speed = BaseSpeed;
 
     void OnInputEvent(Node* viewport, const InputEvent* inputEvent, int64_t shapeIdx);
-    void BodyEntered(Node* body);
+    void BodyEntered(Node* body) const;
 
  private:
     bool Dead{false};
     Vector2 TargetPosition = Vector2::ZERO;
-    Vector2 Velocity = Vector2::ZERO;
     Timer* DieTimer = nullptr;
+    Node2D* SelectNode = nullptr;
 
  protected:
     constexpr static const float BaseSpeed = 5;
