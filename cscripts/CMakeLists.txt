@@ -44,5 +44,5 @@ target_include_directories(MyLibrary PUBLIC epic-online-services/SDK/Include)
 
 #target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
 
-target_link_libraries(MyLibrary PUBLIC godot-cpp)
+target_link_libraries(MyLibrary PUBLIC optimized godot-cpp)
 target_link_libraries(MyLibrary PUBLIC ${EOS_SDK_LIBRARIES})

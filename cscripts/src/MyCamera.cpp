@@ -16,7 +16,7 @@ void MyCamera::_register_methods()
 
 MyCamera::MyCamera() : Speed(10.f), MoveThreshold(25.f)
 {
-    MoveThresholdPercentage = MoveThreshold / 100; // TODO
+    MoveThresholdPercentage = MoveThreshold / 100;
 }
 
 void MyCamera::_ready()
