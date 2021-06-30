@@ -11,10 +11,10 @@ include(project_settings.cmake)
 add_subdirectory(godot-cpp)
 add_subdirectory(epic-online-services)
 
-
-include_directories(include)
-include_directories(src)
-include_directories(epic-online-services/SDK/Include)
+if (MSVC)
+    file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+    file(GLOB HEADER_FILES_UNITS "${CMAKE_CURRENT_SOURCE_DIR}/include/Units/*.hpp")
+endif()
 
 add_library(MyLibrary SHARED
         src/Macros.hpp
@@ -26,11 +26,23 @@ add_library(MyLibrary SHARED
         src/UnitManager.cpp
         src/Utils.hpp
         src/MyCamera.cpp
+        
+        ${HEADER_FILES}
+        ${HEADER_FILES_UNITS}
     )
 
 if (NOT MSVC)
   target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
 endif()
+
+
+
+target_include_directories(MyLibrary PUBLIC include)
+target_include_directories(MyLibrary PUBLIC lib/godot-cpp/include/gen)
+target_include_directories(MyLibrary PUBLIC src)
+target_include_directories(MyLibrary PUBLIC epic-online-services/SDK/Include)
+
+#target_compile_options(MyLibrary PRIVATE -Werror -fno-exceptions)
 
 target_link_libraries(MyLibrary PUBLIC godot-cpp)
 target_link_libraries(MyLibrary PUBLIC ${EOS_SDK_LIBRARIES})

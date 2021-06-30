@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/Units/Marine.gdns" type="Script" id=2]
 [ext_resource path="res://Sprites/Units/Marine/MarineSprite.png" type="Texture" id=3]
@@ -8,8 +8,6 @@ radius = 12.2331
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 9.21112, 13.1565 )
-
-[sub_resource type="SphereMesh" id=3]
 
 [node name="Marine" type="RigidBody2D"]
 collision_layer = 2
@@ -39,9 +37,12 @@ position = Vector2( 0.132435, -3.11217 )
 shape = SubResource( 2 )
 
 [node name="SelectedNode" type="Node2D" parent="."]
-visible = false
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="SelectedNode"]
-position = Vector2( -0.397293, 12.3825 )
-scale = Vector2( 7.49514, -3.3276 )
-mesh = SubResource( 3 )
+[node name="ColorRect" type="ColorRect" parent="SelectedNode"]
+margin_left = -5.91092
+margin_top = 8.17025
+margin_right = 5.08908
+margin_bottom = 19.1702
+__meta__ = {
+"_edit_use_anchors_": false
+}

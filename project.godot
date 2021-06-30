@@ -29,10 +29,6 @@ config/icon="res://icon.png"
 SceneLoader="*res://Singletons/SceneLoader.tscn"
 UnitManager="*res://Singletons/UnitManager.tscn"
 
-[debug]
-
-settings/fps/force_fps=200
-
 [display]
 
 window/vsync/use_vsync=false
@@ -40,6 +36,7 @@ window/vsync/use_vsync=false
 [gdnative]
 
 singletons=[ "res://git_api.gdnlib" ]
+singletons_disabled=[ "res://git_api.gdnlib" ]
 
 [global]
 

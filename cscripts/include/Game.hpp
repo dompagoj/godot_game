@@ -1,4 +1,4 @@
-#pragma once_ready
+#pragma once
 
 #include "Prelude.hpp"
 #include "Node2D.hpp"
@@ -10,16 +10,15 @@
 #include "Units/Marine.hpp"
 #include "PackedScene.hpp"
 #include "Timer.hpp"
+#include "UnitSelection.hpp"
 
 
 class Game : public Node2D
 {
- GODOT_CLASS(Game, Node2D)
-
- public:
-
+GODOT_CLASS(Game, Node2D)
+public:
     bool Dragging = false;
-    std::vector<BaseUnit*> Selected;
+    UnitSelection Selected;
     Vector2 DragStart = Vector2::ZERO;
     Ref<RectangleShape2D> SelectRectangle;
     Timer* PosIndicatorTimer;
@@ -33,9 +32,9 @@ class Game : public Node2D
     _DRAW();
 
     void DrawCircle(Vector2 pos);
-    void HandleLeftClick(godot::InputEventMouseButton*);
-    void HandleRightClick(godot::InputEventMouseButton*);
-    void OnUnitSelectChange(BaseUnit* unit, bool selected);
+    void HandleLeftClick(InputEventMouseButton*);
+    void HandleRightClick(InputEventMouseButton*);
 
     void OnCircleIndicatorTimeout();
+    void AddUnitToSelected(BaseUnit* unit);
 };
